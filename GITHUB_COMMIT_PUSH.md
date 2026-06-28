@@ -2,7 +2,7 @@
 
 Use the commands below from the project folder to verify whether the repository is up to date, identify what needs to be committed, and push it to GitHub using the username `jlcorsair`.
 
-> Current repo note: this workspace currently shows local deletions and untracked files, and there is no remote configured yet.
+> Current repo note: this workspace may need the GitHub repo created before pushing, and GitHub rejects any file larger than 100 MB. If the remote is missing, use `gh repo create` with `--source=. --remote=origin --push`.
 
 ## 1) Go to the project folder
 
@@ -49,16 +49,43 @@ git remote -v
 - Check: output lists `origin` URLs or shows no remotes.
 - Expected result: verify whether Git has a remote and its URL.
 
-## 6) Verify the GitHub remote exists
+## 6) Confirm the GitHub repository exists
 
 ```powershell
-git ls-remote https://github.com/jlcorsair/Pool_Control_System.git
+gh repo view jlcorsair/Pool_Control_System
 ```
 
-- Check: returns refs if repo exists, or error if missing.
-- Expected result: confirm GitHub repo is accessible.
+- Check: command succeeds if the repo exists.
+- Expected result: remote repository exists and is accessible.
 
-## 7) Fetch the latest remote state
+If the repository does not exist yet, create it from the current local repo:
+
+```powershell
+gh repo create Pool_Control_System --public --source=. --remote=origin --push
+```
+
+- Check: command creates the repo, adds `origin`, and pushes local commits.
+- Expected result: GitHub repo is created and `origin` is configured.
+
+If the remote exists but the URL is wrong, update it:
+
+```powershell
+git remote set-url origin https://github.com/jlcorsair/Pool_Control_System.git
+```
+
+- Check: `git remote -v` shows the corrected URL.
+- Expected result: `origin` points to the correct GitHub repository.
+
+## 7) Verify the remote refs
+
+```powershell
+git ls-remote origin
+```
+
+- Check: returns refs from the remote.
+- Expected result: confirm GitHub repo is reachable.
+
+## 8) Fetch the latest remote state
 
 ```powershell
 git fetch origin
@@ -67,7 +94,7 @@ git fetch origin
 - Check: command completes without fatal errors.
 - Expected result: update local refs from remote.
 
-## 8) Compare local branch to remote branch
+## 9) Compare local branch to remote branch
 
 ```powershell
 git log --oneline --left-right HEAD...origin/main
@@ -76,7 +103,9 @@ git log --oneline --left-right HEAD...origin/main
 - Check: output shows commits only on local or remote side.
 - Expected result: know if local and remote diverge.
 
-## 9) Pull latest changes if a remote exists
+If the remote branch does not exist yet, skip this step and proceed to commit and push.
+
+## 10) Pull latest changes if a remote exists
 
 ```powershell
 git pull origin main
@@ -94,7 +123,7 @@ git pull --rebase origin main
 - Check: command runs and rebases local commits onto updated remote.
 - Expected result: keep history linear while updating from remote.
 
-## 10) Review the changes to be committed
+## 11) Review the changes to be committed
 
 ```powershell
 git diff --stat
@@ -104,7 +133,18 @@ git diff
 - Check: `--stat` shows file counts and sizes; `git diff` shows actual content changes.
 - Expected result: inspect what will be committed before staging.
 
-## 11) Stage files for commit
+## 12) Check for oversized files
+
+```powershell
+git ls-tree -r --long HEAD | sort -k4 -rn | head -n 20
+```
+
+- Check: no file is larger than 100 MB.
+- Expected result: ensure GitHub push will not be blocked by large files.
+
+If you find large files, remove them from the repo history or exclude them with `.gitignore` before pushing.
+
+## 13) Stage files for commit
 
 Stage everything:
 
@@ -124,7 +164,7 @@ git add README.md
 - Check: only the specified file appears staged.
 - Expected result: stage only the files you want.
 
-## 12) Commit the changes
+## 14) Commit the changes
 
 ```powershell
 git commit -m "Update Pool Control System files"
@@ -133,24 +173,7 @@ git commit -m "Update Pool Control System files"
 - Check: output confirms commit was created.
 - Expected result: record staged changes in local history.
 
-## 13) Push to GitHub
-
-If the repository has no remote yet, add one first:
-
-```powershell
-git remote add origin https://github.com/jlcorsair/Pool_Control_System.git
-```
-
-Or use SSH:
-
-```powershell
-git remote add origin git@github.com:jlcorsair/Pool_Control_System.git
-```
-
-- Check: `git remote -v` shows the new origin URL.
-- Expected result: remote is configured for push/pull.
-
-Then push:
+## 15) Push to GitHub
 
 ```powershell
 git push -u origin main
@@ -159,7 +182,7 @@ git push -u origin main
 - Check: output indicates refs were pushed and upstream is set.
 - Expected result: local `main` is uploaded to GitHub.
 
-## 14) If the branch already exists on GitHub, use
+## 16) If the branch already exists on GitHub, use
 
 ```powershell
 git push
@@ -168,7 +191,7 @@ git push
 - Check: output confirms changes are pushed.
 - Expected result: update the tracked branch without resetting upstream.
 
-## 15) Quick full check sequence
+## 17) Quick full check sequence
 
 Run this sequence when you want to verify everything at once:
 
@@ -176,8 +199,8 @@ Run this sequence when you want to verify everything at once:
 cd "D:\PROJECTS\HOA\Pool_Control_System"
 git status --short --branch
 git remote -v
+git ls-remote origin
 git fetch origin
-git status
 git pull origin main
 git add .
 git commit -m "Update Pool Control System files"
@@ -196,4 +219,5 @@ git push -u origin main
 git add .
 git commit
 ```
+- If the remote repository is missing, use `gh repo create Pool_Control_System --public --source=. --remote=origin --push`.
 - After successful push, verify the repository appears in your browser under your GitHub account.
