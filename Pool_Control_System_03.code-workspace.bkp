@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "name": "pentair_remote_logger_esp32",
+      "path": "pentair_remote_logger_esp32"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/pentair_remote_logger_esp32": true
+    }
+  }
+}

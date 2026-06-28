@@ -1,0 +1,36 @@
+TP-Link Pharos direct LAN connection login:
+user: admin
+pass: tp_link_01
+
+-- Pharos AP @ the pool system --
+
+Operation Mode: Access Point
+IP Address: 192.168.0.101
+Subnet Mask: 255.255.255.0
+SSID: Montecito-Pool
+Mode: 802.11b/g/n
+Channel Width: 20/40MHz
+Channel/Frequency: Auto
+Security: WPA-PSK / WPA2-PSK
+PSK Pass: montecito_pool_2047
+Distance Setting: 5km
+Maxtream: disabled
+
+-- Pharos Home Bridge --
+
+Operation Mode: Bridge
+IP Address: 192.168.0.102
+Subnet Mask: 255.255.255.0
+SSID of Remote AP: Montecito-Pool
+MAC of Remote AP: B8-FB-B3-1A-AA-E8
+Mode: 802.11b/g/n
+WDS: Auto
+Channel Width: 20/40MHz
+Security: WPA-PSK / WPA2-PSK
+PSK Pass: montecito_pool_2047
+Distance Setting: 5km
+Lock to AP: enabled
+Wireless Radio: enabled
+SSID: Montecito-Pool-Logger
+Security: WPA-PSK / WPA2-PSK
+PSK Pass: montecito_pool_2047

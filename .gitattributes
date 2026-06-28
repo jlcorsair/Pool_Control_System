@@ -1,0 +1,9 @@
+*.bin binary
+*.dat binary
+*.dmg binary
+*.exe binary
+*.msi binary
+*.pdf binary
+*.png binary
+*.ttf binary
+*.zip binary
